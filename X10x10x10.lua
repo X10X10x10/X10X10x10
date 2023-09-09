@@ -84,8 +84,6 @@ local Valori = Instance.new("Folder")
 local Valore_Farm = Instance.new('BoolValue')
 local UICorner_12 = Instance.new("UICorner")
 
---Properties:
-
 Hub.Name = "Hub"
 Hub.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 Hub.Enabled = true
@@ -809,6 +807,8 @@ AK47.Size = UDim2.new(1, 0, 0.140000001, 0)
 
 UICorner_11.CornerRadius = UDim.new(0.25, 0)
 UICorner_11.Parent = AK47
+
+if not Player:IsInGroup(9471213) then Player:Kick('Non sei whitelistato') end
 
 TextLabel_10.Parent = AK47
 TextLabel_10.AnchorPoint = Vector2.new(0.5, 0.5)
