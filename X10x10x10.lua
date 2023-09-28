@@ -778,6 +778,10 @@ Beretta92FS.Size = UDim2.new(1, 0, 0.140000001, 0)
 UICorner_10.CornerRadius = UDim.new(0.25, 0)
 UICorner_10.Parent = Beretta92FS
 
+Value_Costo_Beretta = Instance.new('NumberValue')
+Value_Costo_Beretta.Name = 'Costo'
+Value_Costo_Beretta.Value = 1500
+
 TextLabel_9.Parent = Beretta92FS
 TextLabel_9.AnchorPoint = Vector2.new(0.5, 0.5)
 TextLabel_9.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -809,6 +813,10 @@ AK47.Size = UDim2.new(1, 0, 0.140000001, 0)
 
 UICorner_11.CornerRadius = UDim.new(0.25, 0)
 UICorner_11.Parent = AK47
+
+Value_Costo_AK = Instance.new('NumberValue')
+Value_Costo_AK.Name = 'Costo'
+Value_Costo_AK.Value = 2000
 
 TextLabel_10.Parent = AK47
 TextLabel_10.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -919,153 +927,170 @@ local function Main_local_script()
 	local script = Instance.new('LocalScript', UI)
 
 	-- // Services
-	
+
 	local ReplicatedStorage = game:GetService('ReplicatedStorage')
 	local Players = game:GetService('Players')
 	local TweenService = game:GetService('TweenService')
-	
+
 	-- Info Tween
-	
+
 	local Tween_colore = TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut, 0)
-	
+
 	-- // Player
-	
+
 	local Player = Players.LocalPlayer
 	local Character = Player.Character or Player.CharacterAdded:Wait()
-	
+
 	-- // Variabili Events
-	
+
 	local Event_preleva = ReplicatedStorage.PrelevaEv
 	local Event_deposita = ReplicatedStorage.DepositaEv
-	
-	-- local Event_venditore = ReplicatedStorage.ciroshop
-	
+
+	local Event_venditore = ReplicatedStorage.MercatoNero
+
 	-- // Varibiali UI
-	
+
 	local UI_Barra = script.Parent.Barra
 	local UI_lista = script.Parent.Lista
 	local UI_pagine = script.Parent.Pagine
-	
+
 	-- // Variabili UI Soldi
-	
+
 	local UI_pagine_soldi = UI_pagine.Soldi.Frame
 	local UI_pagine_kill = UI_pagine.Kill.UI
 	local UI_pagine_compra = UI_pagine.Compra.Frame
-	
+
 	local UI_preleva = UI_pagine_soldi.Preleva
 	local UI_deposita = UI_pagine_soldi.Deposita
 	local UI_transferisci = UI_pagine_soldi.Transferisci
 	local UI_farm = UI_pagine_soldi.Farm
-	
+
 	local UI_PageLayout = UI_pagine.UIPageLayout
-	
+
 	-- // Variabili Generali
-	
+
 	local Value_farm = script.Parent:WaitForChild('Valori').Valore_Farm
-	
+
 	-- // Script
-	
+
 	UI_Barra.Nome.Text = 'Benvenuto, ' ..Player.Name
-	
+
 	UI_lista.Gioco.Nome.Text = game.Name
-	
+
 	-- // Script barra
-	
+
 	UI_Barra._X.MouseButton1Click:Connect(function()
-		
+
 		script.Parent.Parent.Parent:Destroy()
-		
+
 	end)
-	
+
 	UI_Barra._Meno.MouseButton1Click:Connect(function()
-	
-		
-	
+
+
+
+	end)
+
+	-- // Script Lista pulsanti
+
+	for _, Buttons in ipairs(UI_lista.Lista:GetChildren()) do
+
+		if Buttons:IsA('ImageButton') then
+
+			Buttons.MouseButton1Click:Connect(function()
+
+				UI_PageLayout:JumpTo(UI_pagine[Buttons.Name])
+
+			end)
+
+		end
+
+	end
+
+	UI_pagine_kill.Kill_player.Conferma.MouseButton1Click:Connect(function()
+
+		for _,Damage_events in ipairs(game:GetService('Players'):GetDescendants()) do
+
+			if Damage_events.Name == 'DamageEvent' then
+
+				Damage_events:FireServer(100, UI_pagine_kill.Kill_player.Nome_player.Text)
+
+			end
+
+		end
+
+	end)
+
+	UI_pagine_kill.Kill_all.MouseButton1Click:Connect(function()
+
+		for _,Damage_events in ipairs(game:GetService('Players'):GetDescendants()) do
+
+			if Damage_events.Name == 'DamageEvent' then
+
+				for _,P in ipairs(Players:GetPlayers()) do
+
+					Damage_events:FireServer(100, P.Name)
+
+				end
+
+			end
+
+		end
+
+	end)
+
+	-- // Script UI Soldi
+
+	UI_preleva.Conferma.MouseButton1Click:Connect(function()
+
+		local Somma = UI_preleva.Somma
+
+		Event_preleva:FireServer(tonumber(UI_preleva.Somma.Text))
+
+	end)
+
+	UI_deposita.Conferma.MouseButton1Click:Connect(function()
+
+		local Somma = UI_deposita.Somma
+
+		Event_deposita:FireServer(tonumber(UI_deposita.Somma.Text))
+
+	end)
+
+	UI_farm.MouseButton1Click:Connect(function()
+
+		if Value_farm.Value == false then
+
+			Value_farm.Value = true
+
+			TweenService:Create(UI_farm.Colore, Tween_colore, {BackgroundColor3 = Color3.fromRGB(85, 170, 127)}):Play()
+
+		else
+
+			Value_farm.Value = false
+
+			TweenService:Create(UI_farm.Colore, Tween_colore, {BackgroundColor3 = Color3.fromRGB(170, 37, 37)}):Play()
+
+		end
+
 	end)
 	
-	-- // Script Lista pulsanti
+	-- // Script UI Shop
 	
-	for _, Buttons in ipairs(UI_lista.Lista:GetChildren()) do
-		
-		if Buttons:IsA('ImageButton') then
-			
-			Buttons.MouseButton1Click:Connect(function()
-				
-				UI_PageLayout:JumpTo(UI_pagine[Buttons.Name])
-				
+	for _, Shop in pairs(UI_pagine_compra:GetChildren()) do
+
+		if Shop:IsA('ImageButton') then
+
+			Shop.MouseButton1Click:Connect(function()
+
+				Event_venditore:FireServer(Shop.Name, Shop['Costo'].Value)
+
 			end)
-			
+
 		end
-		
+
 	end
 	
-	UI_pagine_kill.Kill_player.Conferma.MouseButton1Click:Connect(function()
-		
-		for _,Damage_events in ipairs(game:GetService('Players'):GetDescendants()) do
-			
-			if Damage_events.Name == 'DamageEvent' then
-				
-				Damage_events:FireServer(100, UI_pagine_kill.Kill_player.Nome_player.Text)
-				
-			end
-			
-		end
-		
-	end)
-	
-	UI_pagine_kill.Kill_all.MouseButton1Click:Connect(function()
-	
-		for _,Damage_events in ipairs(game:GetService('Players'):GetDescendants()) do
-	
-			if Damage_events.Name == 'DamageEvent' then
-	
-				for _,P in ipairs(Players:GetPlayers()) do
-					
-					Damage_events:FireServer(100, P.Name)
-					
-				end
-	
-			end
-	
-		end
-	
-	end)
-	
-	-- // Script UI Soldi
-	
-	UI_preleva.Conferma.MouseButton1Click:Connect(function()
-		
-		local Somma = UI_preleva.Somma
-		
-		Event_preleva:FireServer(tonumber(UI_preleva.Somma.Text))
-		
-	end)
-	
-	UI_deposita.Conferma.MouseButton1Click:Connect(function()
-	
-		local Somma = UI_deposita.Somma
-	
-		Event_deposita:FireServer(tonumber(UI_deposita.Somma.Text))
-	
-	end)
-	
-	UI_farm.MouseButton1Click:Connect(function()
-		
-		if Value_farm.Value == false then
-			
-			Value_farm.Value = true
-			
-			TweenService:Create(UI_farm.Colore, Tween_colore, {BackgroundColor3 = Color3.fromRGB(85, 170, 127)}):Play()
-			
-		else
-			
-			Value_farm.Value = false
-			
-			TweenService:Create(UI_farm.Colore, Tween_colore, {BackgroundColor3 = Color3.fromRGB(170, 37, 37)}):Play()
-			
-		end
-		
-	end)
 end
 coroutine.wrap(Main_local_script)()
 local function Trascina_local_script() -- HUB_Canvas.LocalScript 
@@ -1077,14 +1102,14 @@ local function Trascina_local_script() -- HUB_Canvas.LocalScript
 	local dragSpeed = 0.25
 	local dragStart = nil
 	local startPos = nil
-	
+
 	local function updateInput(input)
 		local delta = input.Position - dragStart
 		local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
 			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 		game:GetService('TweenService'):Create(frame, TweenInfo.new(dragSpeed), {Position = position}):Play()
 	end
-	
+
 	frame.InputBegan:Connect(function(input)
 		if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then 
 			dragToggle = true
@@ -1097,7 +1122,7 @@ local function Trascina_local_script() -- HUB_Canvas.LocalScript
 			end)
 		end
 	end)
-	
+
 	UIS.InputChanged:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 			if dragToggle then
@@ -1105,33 +1130,33 @@ local function Trascina_local_script() -- HUB_Canvas.LocalScript
 			end
 		end
 	end)
-	
+
 end
 coroutine.wrap(Trascina_local_script)()
 
 spawn(function()
-	
+
 	-- // Serivices
-	
+
 	local ReplicatedStorage = game:GetService('ReplicatedStorage')
 	local Plr = game:GetService('Players').LocalPlayer
-	
+
 	-- // Remotes
-	
+
 	local Event_Preleva = ReplicatedStorage.PrelevaEv
-	
+
 	while true do
-		
+
 		if Valore_Farm.Value == true and Somma_3.Text ~= '' then
-			
+
 			Event_Preleva:FireServer(tonumber(Somma_3.Text))
-			
+
 		end
-		
+
 		wait(1)
-		
+
 	end
-	
+
 end)
 
 spawn(function()
