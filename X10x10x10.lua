@@ -1,12 +1,10 @@
-if not game.Players.LocalPlayer:IsInGroup(9471213) then game.Players.LocalPlayer:Kick('Non sei whitelistato') end
-
 local Hub = Instance.new("ScreenGui")
 local HUB_Canvas = Instance.new("CanvasGroup")
 local UI = Instance.new("Frame")
 local Lista = Instance.new("Frame")
 local Lista_2 = Instance.new("Frame")
 local UIListLayout = Instance.new("UIListLayout")
-local Compra = Instance.new("Frame")
+local Compra = Instance.new("ImageButton")
 local TextLabel = Instance.new("TextLabel")
 local UIListLayout_2 = Instance.new("UIListLayout")
 local Icon = Instance.new("ImageLabel")
@@ -155,7 +153,7 @@ TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
 TextLabel.Size = UDim2.new(1, 0, 0.5, 0)
 TextLabel.Font = Enum.Font.Gotham
 TextLabel.Text = "Compra Armi"
-TextLabel.TextColor3 = Color3.fromRGB(125, 125, 125)
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextScaled = true
 TextLabel.TextSize = 14.000
 TextLabel.TextWrapped = true
@@ -176,7 +174,7 @@ Icon.LayoutOrder = 1
 Icon.Position = UDim2.new(0.0450000018, 0, 0.112000003, 0)
 Icon.Size = UDim2.new(0.11451827, 0, 0.600000024, 0)
 Icon.Image = "rbxassetid://7734056813"
-Icon.ImageColor3 = Color3.fromRGB(125, 125, 125)
+Icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
 
 UIAspectRatioConstraint.Parent = Icon
 
@@ -767,7 +765,7 @@ Beretta92FS.Parent = Frame_2
 Beretta92FS.Active = false
 Beretta92FS.AnchorPoint = Vector2.new(0.5, 0.5)
 Beretta92FS.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-Beretta92FS.BackgroundTransparency = 1.000
+Beretta92FS.BackgroundTransparency = 0
 Beretta92FS.BorderColor3 = Color3.fromRGB(125, 125, 125)
 Beretta92FS.BorderSizePixel = 0
 Beretta92FS.LayoutOrder = 1
@@ -781,6 +779,7 @@ UICorner_10.Parent = Beretta92FS
 Value_Costo_Beretta = Instance.new('NumberValue')
 Value_Costo_Beretta.Name = 'Costo'
 Value_Costo_Beretta.Value = 1500
+Value_Costo_Beretta.Parent = Beretta92FS
 
 TextLabel_9.Parent = Beretta92FS
 TextLabel_9.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -803,7 +802,7 @@ AK47.Parent = Frame_2
 AK47.Active = false
 AK47.AnchorPoint = Vector2.new(0.5, 0.5)
 AK47.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-AK47.BackgroundTransparency = 1.000
+AK47.BackgroundTransparency = 0
 AK47.BorderColor3 = Color3.fromRGB(125, 125, 125)
 AK47.BorderSizePixel = 0
 AK47.LayoutOrder = 2
@@ -817,6 +816,7 @@ UICorner_11.Parent = AK47
 Value_Costo_AK = Instance.new('NumberValue')
 Value_Costo_AK.Name = 'Costo'
 Value_Costo_AK.Value = 2000
+Value_Costo_AK.Parent = AK47
 
 TextLabel_10.Parent = AK47
 TextLabel_10.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1083,7 +1083,7 @@ local function Main_local_script()
 
 			Shop.MouseButton1Click:Connect(function()
 
-				Event_venditore:FireServer(Shop.Name, Shop['Costo'].Value)
+				Event_venditore:FireServer(Shop.Name, Shop.Costo.Value)
 
 			end)
 
